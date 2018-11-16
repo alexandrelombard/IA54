@@ -1,0 +1,16 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+event IntentionEvent {
+	var force: Vector2d
+	
+	new (f: Vector2d) {
+		this.force = f
+	}
+}

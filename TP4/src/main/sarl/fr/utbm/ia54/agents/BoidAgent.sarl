@@ -1,0 +1,85 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.agents
+
+import fr.utbm.ia54.IntentionEvent
+import fr.utbm.ia54.PerceptionEvent
+import fr.utbm.ia54.Vector2d
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import java.util.List
+import fr.utbm.ia54.Perception
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+agent BoidAgent {
+	
+	uses DefaultContextInteractions
+
+	on Initialize {
+		//
+	}
+
+	on Destroy {
+		//
+	}
+	
+	on PerceptionEvent {
+		var force = new Vector2d()
+		
+		force = force + cohesion(occurrence.velocity, occurrence.perceivedBodies)
+		force = force + alignment(occurrence.velocity, occurrence.perceivedBodies)
+		force = force + separation(occurrence.perceivedBodies)
+		
+		new IntentionEvent(force).emit
+	}
+	
+	def cohesion(velocity: Vector2d, perceptions : List<Perception>) : Vector2d {
+		// Compute the average location
+		// Note: perceptions are relative so the average location is also relative
+		var averageLocation = new Vector2d()
+		
+		for(p: perceptions) {
+			averageLocation = averageLocation + p.position
+		}
+		
+		averageLocation = averageLocation * (1d / perceptions.size)
+		
+		// Steer to the average location 
+		return averageLocation - velocity
+	}
+	
+	def alignment(velocity: Vector2d, perceptions: List<Perception>): Vector2d {
+		// Compute the average velocity
+		var averageVelocity = new Vector2d
+		
+		for(p: perceptions) {
+			averageVelocity = averageVelocity + p.velocity
+		}
+		
+		averageVelocity = averageVelocity * (1d / perceptions.size)
+		
+		return averageVelocity - velocity
+	}
+	
+	def separation(perceptions: List<Perception>): Vector2d {
+		// Compute average vector divided by distance
+		var force = new Vector2d
+		var count = 0
+		
+		for(p: perceptions) {
+			if (p.position.length > 0) {
+				force = force + p.position * (1d / p.position.length)
+				count++;
+			}
+		}
+		
+		force = force * (1d / count)
+		
+		return force
+	}
+}

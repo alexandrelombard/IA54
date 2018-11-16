@@ -1,0 +1,24 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+import java.util.List
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+event PerceptionEvent {
+	
+	// Self-perception
+	val velocity: Vector2d
+	// External perceptions
+	val perceivedBodies: List<Perception>
+	
+	new (velocity: Vector2d, perceivedBodies: List<Perception>) {
+		this.velocity = velocity
+		this.perceivedBodies = perceivedBodies
+	} 
+	
+}

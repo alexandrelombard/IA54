@@ -1,0 +1,49 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.agents
+
+import fr.utbm.ia54.SimulationStepEvent
+import fr.utbm.ia54.gui.BoidsApplication
+import io.sarl.core.AgentSpawned
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import io.sarl.core.Schedules
+import javafx.application.Application
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+agent BootAgent {
+	uses Logging, Schedules, Lifecycle, DefaultContextInteractions
+
+	on Initialize {
+		info("Spawning environment and boids agents")
+		
+		// We spawn the environment agent
+		typeof(EnvironmentAgent).spawn
+		
+		// Every 50 milliseconds, we run a simulation step
+		every(50.milliseconds) [
+			new SimulationStepEvent(50.milliseconds).emit
+		]
+
+		info("Creating UI")
+		Application::launch(typeof(BoidsApplication))
+	}
+	
+	on AgentSpawned [occurrence.agentType == typeof(EnvironmentAgent)] {
+		// When the environment is spawned, we spawn the boids
+		for (i : 0 .. 100) {
+			typeof(BoidAgent).spawn
+		}
+	}
+
+	on Destroy {
+		//
+	}
+}

@@ -1,0 +1,23 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.gui.components
+
+import javafx.scene.Group
+import javafx.scene.shape.Circle
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+class BoidView extends Group {
+	
+	new () {
+		this.children.add(new Circle(0, 0, 5))
+	}
+	
+	new (x: double, y: double) {
+		this.children.add(new Circle(x, y, 5))
+	}
+	
+}

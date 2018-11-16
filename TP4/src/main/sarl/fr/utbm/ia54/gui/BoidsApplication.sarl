@@ -1,0 +1,55 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.gui
+
+import io.sarl.javafx.FxApplication
+import javafx.fxml.FXMLLoader
+import javafx.scene.Group
+import javafx.scene.Scene
+import javafx.stage.Stage
+import javafx.scene.control.MenuBar
+import javafx.scene.layout.VBox
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuItem
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+class BoidsApplication extends FxApplication {
+	
+	protected def doApplicationStart(stage : Stage) : FXMLLoader {
+		val root = new VBox()
+		val scene = new Scene(root)
+		val controller = new BoidsApplicationController()
+		val content = new Group()
+		
+		val menuBar = new MenuBar()
+		val mainMenu = new Menu("Menu")
+		val initializeMenuItem = new MenuItem("Initialize")
+		val exitMenuItem = new MenuItem("Exit")
+		
+		initializeMenuItem.onAction = [ 
+			controller.initialize
+		]
+		
+		mainMenu.items.add(initializeMenuItem)
+		mainMenu.items.add(exitMenuItem)
+		menuBar.menus.add(mainMenu)
+		root.children.add(menuBar)
+		root.children.add(content)
+
+		controller.content = content
+
+		var loader = new FXMLLoader
+		loader.root = root
+		loader.controller = controller
+		
+		stage.title = "Boids"
+		stage.scene = scene
+
+		return loader
+	}
+	
+}

@@ -1,0 +1,18 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+class Perception extends Object {
+	public val position : Vector2d
+	public val velocity : Vector2d
+	
+	new (p: Vector2d, v: Vector2d) {
+		this.position = p
+		this.velocity = v
+	}
+}

@@ -1,0 +1,35 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+import org.eclipse.xtend.lib.annotations.Accessors
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+class BoidBody extends Object {
+
+	/** Perception radius of the body */
+	public val perceptionRadius = 100.0	// Note: the value is constant here, feel free to make it customizable
+	
+	@Accessors(PUBLIC_GETTER)
+	var position : Vector2d = new Vector2d()
+	@Accessors(PUBLIC_GETTER)
+	var velocity : Vector2d = new Vector2d()
+	
+	new() {
+		//
+	}
+	
+	new(position: Vector2d) {
+		this.position = new Vector2d(position)
+	}
+	
+	def move(acceleration: Vector2d, deltaTime: double) {
+		this.velocity = this.velocity + acceleration * deltaTime
+	}
+	
+}
+

@@ -1,0 +1,18 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+event SimulationStepEvent {
+
+	val deltaTime : double
+	
+	new(deltaTime: double) {
+		this.deltaTime = deltaTime
+	}
+	
+}

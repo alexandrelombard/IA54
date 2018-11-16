@@ -1,0 +1,16 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+event EnvironmentUpdatedEvent {
+	val environment: Environment
+	
+	new(environment: Environment) {
+		this.environment = environment
+	}
+}

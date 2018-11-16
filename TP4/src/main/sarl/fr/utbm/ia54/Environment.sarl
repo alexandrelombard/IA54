@@ -1,0 +1,19 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54
+
+import io.sarl.lang.core.Address
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Accessors
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+class Environment extends Object {
+	
+	@Accessors(PUBLIC_GETTER)
+	val bodies : Map<Address, BoidBody> = newHashMap
+
+}

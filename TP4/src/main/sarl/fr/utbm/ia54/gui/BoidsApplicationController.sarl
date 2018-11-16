@@ -1,0 +1,55 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.gui
+
+import io.sarl.javafx.FxViewerController
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.UUID
+import javafx.fxml.FXML
+import fr.utbm.ia54.Environment
+import fr.utbm.ia54.EnvironmentUpdatedEvent
+import javafx.scene.Group
+import org.eclipse.xtend.lib.annotations.Accessors
+import fr.utbm.ia54.gui.components.BoidView
+
+/** 
+ * @author Alexandre Lombard
+ * 
+ */
+class BoidsApplicationController extends FxViewerController {
+
+	val launched = new AtomicBoolean(false)
+	var launchedAgent : UUID
+	
+	@Accessors(PUBLIC_SETTER)
+	var content: Group
+
+	/** UI initialization. The agent framework is started. */
+	@FXML
+	def initialize {
+		if (!this.launched.getAndSet(true)) {
+			this.launchedAgent = startAgentApplication(typeof(BoidsApplicationAgent)) [
+				//
+			]
+		}
+	}
+
+	protected def refresh(environment: Environment) {
+		// Remove everything
+		content.children.clear
+		
+		// Add per-body boid view
+		for (body : environment.bodies.values) {
+			val boidView = new BoidView()
+			boidView.translateX = body.position.x
+			boidView.translateY = body.position.y
+			content.children.add(boidView)
+		}
+	}
+
+	dispatch def receiveEvent(^event : EnvironmentUpdatedEvent) {
+		refresh(^event.environment)
+	}
+
+}
