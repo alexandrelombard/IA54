@@ -48,7 +48,24 @@ class Vector2d extends Object {
 		return new Vector2d(this.x * l, this.y * l)
 	}
 	
+	def operator_divide(l: Double) : Vector2d {
+		return new Vector2d(this.x / l, this.y / l)
+	}
+	
 	def length(): double {
 		return this.x * this.x + this.y * this.y
+	}
+	
+	def angle(v: Vector2d): double {
+		val angle = Math.atan2(v.y, v.x) - Math.atan2(this.y, this.x)
+		return angle
+	}
+	
+	def rotate(alpha: double): Vector2d {
+		return new Vector2d(x * Math.cos(alpha) - y * Math.sin(alpha), x * Math.sin(alpha) + y * Math.cos(alpha))
+	}
+	
+	override toString : String {
+		return "[" + this.x + ", " + this.y + "]"
 	}
 }

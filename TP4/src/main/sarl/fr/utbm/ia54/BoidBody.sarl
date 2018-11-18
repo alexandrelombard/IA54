@@ -9,15 +9,26 @@ import org.eclipse.xtend.lib.annotations.Accessors
  * @author Alexandre Lombard
  * 
  */
+// TODO Adjust body behavior
 class BoidBody extends Object {
 
 	/** Perception radius of the body */
-	public val perceptionRadius = 500.0	// Note: the value is constant here, feel free to make it customizable
+	public val perceptionRadius = 100.0	// Note: the value is constant here, feel free to make it customizable
+	
+	public val maxAcceleration = 0.001d
+	
+	public val minVelocity = 0.00005d
+	
+	/** Max velocity length */
+	public val maxVelocity = 0.003d
+	
+	/** Max angular velocity */
+	public val maxAngularVelocity = 0.01d
 	
 	@Accessors(PUBLIC_GETTER)
 	var position : Vector2d = new Vector2d()
 	@Accessors(PUBLIC_GETTER)
-	var velocity : Vector2d = new Vector2d()
+	var velocity : Vector2d = new Vector2d(minVelocity, 0.0d)
 	
 	new() {
 		//
@@ -28,7 +39,26 @@ class BoidBody extends Object {
 	}
 	
 	def move(acceleration: Vector2d, deltaTime: double) {
-		this.velocity = this.velocity + acceleration * deltaTime
+		// Limiting acceleration
+		var effectiveAcceleration = if(acceleration.length > maxAcceleration) (acceleration / acceleration.length) * maxAcceleration else acceleration
+		
+		// Hack to reduce angular velocity
+		while(Math.abs(this.velocity.angle(this.velocity + effectiveAcceleration * deltaTime)) > maxAngularVelocity) {
+			effectiveAcceleration = effectiveAcceleration * 0.5;
+		} 
+		
+		// Updating the velocity according to the acceleration
+		var newVelocity = this.velocity + effectiveAcceleration * deltaTime
+		
+		// Then, limiting velocity (length)
+		if (newVelocity.length > maxVelocity)
+			newVelocity = newVelocity / newVelocity.length * maxVelocity
+		if (newVelocity.length < minVelocity)
+			newVelocity = newVelocity / newVelocity.length * minVelocity
+		
+		// Performing the update
+		this.velocity = newVelocity
+		this.position = this.position + this.velocity * deltaTime
 	}
 	
 }

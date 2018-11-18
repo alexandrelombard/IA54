@@ -5,6 +5,7 @@ package fr.utbm.ia54.gui.components
 
 import javafx.scene.Group
 import javafx.scene.shape.Circle
+import javafx.scene.shape.Line
 
 /** 
  * @author Alexandre Lombard
@@ -12,12 +13,18 @@ import javafx.scene.shape.Circle
  */
 class BoidView extends Group {
 	
+	val DEFAULT_RADIUS = 5d
+	val DEFAULT_LINE_LENGTH = 10d
+	
 	new () {
-		this.children.add(new Circle(0, 0, 5))
+		this.children.add(new Circle(0, 0, DEFAULT_RADIUS))
+		this.children.add(new Line(0, 0, DEFAULT_LINE_LENGTH, 0))
 	}
 	
-	new (x: double, y: double) {
-		this.children.add(new Circle(x, y, 5))
+	new (x: double, y: double, theta: double) {
+		this.children.add(new Circle(x, y, DEFAULT_RADIUS))
+		this.children.add(
+			new Line(x, y, x + DEFAULT_LINE_LENGTH * Math.cos(theta), y + DEFAULT_LINE_LENGTH * Math.sin(theta)))
 	}
 	
 }

@@ -54,7 +54,7 @@ public class EnvironmentAgent extends Agent {
   private final Map<UUID, Vector2d> intentions = new ConcurrentHashMap<UUID, Vector2d>();
   
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
-    IntegerRange _upTo = new IntegerRange(0, 10);
+    IntegerRange _upTo = new IntegerRange(0, 50);
     for (final Integer i : _upTo) {
       Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
       _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(BoidAgent.class);

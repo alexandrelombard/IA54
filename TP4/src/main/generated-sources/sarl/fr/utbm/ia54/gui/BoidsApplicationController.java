@@ -69,6 +69,7 @@ public class BoidsApplicationController extends FxViewerController {
           final BoidView boidView = new BoidView();
           boidView.setTranslateX((body.getPosition().x).doubleValue());
           boidView.setTranslateY((body.getPosition().y).doubleValue());
+          boidView.setRotate(Math.toDegrees(Math.atan2((body.getVelocity().y).doubleValue(), (body.getVelocity().x).doubleValue())));
           this.content.getChildren().add(boidView);
         }
       }

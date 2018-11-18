@@ -16,4 +16,5 @@ class Environment extends Object {
 	
 	@Accessors(PUBLIC_GETTER)
 	val bodies : Map<UUID, BoidBody> = new ConcurrentHashMap
+	
 }

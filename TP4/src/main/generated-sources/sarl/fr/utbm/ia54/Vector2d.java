@@ -68,10 +68,46 @@ public class Vector2d {
   }
   
   @Pure
+  public Vector2d operator_divide(final Double l) {
+    double _divide = DoubleExtensions.operator_divide(this.x, l);
+    double _divide_1 = DoubleExtensions.operator_divide(this.y, l);
+    return new Vector2d(_divide, _divide_1);
+  }
+  
+  @Pure
   public double length() {
     double _multiply = DoubleExtensions.operator_multiply(this.x, this.x);
     double _multiply_1 = DoubleExtensions.operator_multiply(this.y, this.y);
     return (_multiply + _multiply_1);
+  }
+  
+  @Pure
+  public double angle(final Vector2d v) {
+    double _atan2 = Math.atan2((v.y).doubleValue(), (v.x).doubleValue());
+    double _atan2_1 = Math.atan2((this.y).doubleValue(), (this.x).doubleValue());
+    final double angle = (_atan2 - _atan2_1);
+    return angle;
+  }
+  
+  @Pure
+  public Vector2d rotate(final double alpha) {
+    double _cos = Math.cos(alpha);
+    double _multiply = ((this.x).doubleValue() * _cos);
+    double _sin = Math.sin(alpha);
+    double _multiply_1 = ((this.y).doubleValue() * _sin);
+    double _minus = (_multiply - _multiply_1);
+    double _sin_1 = Math.sin(alpha);
+    double _multiply_2 = ((this.x).doubleValue() * _sin_1);
+    double _cos_1 = Math.cos(alpha);
+    double _multiply_3 = ((this.y).doubleValue() * _cos_1);
+    double _plus = (_multiply_2 + _multiply_3);
+    return new Vector2d(_minus, _plus);
+  }
+  
+  @Override
+  @Pure
+  public String toString() {
+    return (((("[" + this.x) + ", ") + this.y) + "]");
   }
   
   @Override

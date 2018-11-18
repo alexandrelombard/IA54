@@ -52,6 +52,7 @@ class BoidsApplicationController extends FxViewerController {
 				val boidView = new BoidView()
 				boidView.translateX = body.position.x
 				boidView.translateY = body.position.y
+				boidView.rotate = Math.toDegrees(Math.atan2(body.velocity.y, body.velocity.x))
 				
 				content.children.add(boidView)
 			}

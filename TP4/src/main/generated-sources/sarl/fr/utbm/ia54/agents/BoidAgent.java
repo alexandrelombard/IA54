@@ -44,13 +44,16 @@ public class BoidAgent extends Agent {
   private void $behaviorUnit$PerceptionEvent$2(final PerceptionEvent occurrence) {
     Vector2d force = new Vector2d();
     Vector2d _cohesion = this.cohesion(occurrence.velocity, occurrence.perceivedBodies);
-    Vector2d _plus = force.operator_plus(_cohesion);
+    Vector2d _multiply = _cohesion.operator_multiply(Double.valueOf(0.001));
+    Vector2d _plus = force.operator_plus(_multiply);
     force = _plus;
     Vector2d _alignment = this.alignment(occurrence.velocity, occurrence.perceivedBodies);
-    Vector2d _plus_1 = force.operator_plus(_alignment);
+    Vector2d _multiply_1 = _alignment.operator_multiply(Double.valueOf(0.01));
+    Vector2d _plus_1 = force.operator_plus(_multiply_1);
     force = _plus_1;
     Vector2d _separation = this.separation(occurrence.perceivedBodies);
-    Vector2d _plus_2 = force.operator_plus(_separation);
+    Vector2d _multiply_2 = _separation.operator_multiply(Double.valueOf(1.0));
+    Vector2d _plus_2 = force.operator_plus(_multiply_2);
     force = _plus_2;
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
     final Scope<Address> _function = (Address it) -> {
@@ -69,9 +72,8 @@ public class BoidAgent extends Agent {
       averageLocation = _plus;
     }
     int _size = perceptions.size();
-    double _divide = (1d / _size);
-    Vector2d _multiply = averageLocation.operator_multiply(Double.valueOf(_divide));
-    averageLocation = _multiply;
+    Vector2d _divide = averageLocation.operator_divide(Double.valueOf(((double) _size)));
+    averageLocation = _divide;
     return averageLocation.operator_minus(velocity);
   }
   
@@ -83,9 +85,8 @@ public class BoidAgent extends Agent {
       averageVelocity = _plus;
     }
     int _size = perceptions.size();
-    double _divide = (1d / _size);
-    Vector2d _multiply = averageVelocity.operator_multiply(Double.valueOf(_divide));
-    averageVelocity = _multiply;
+    Vector2d _divide = averageVelocity.operator_divide(Double.valueOf(((double) _size)));
+    averageVelocity = _divide;
     return averageVelocity.operator_minus(velocity);
   }
   
@@ -97,15 +98,14 @@ public class BoidAgent extends Agent {
       boolean _greaterThan = (_length > 0);
       if (_greaterThan) {
         double _length_1 = p.position.length();
-        double _divide = (1d / _length_1);
-        Vector2d _multiply = p.position.operator_multiply(Double.valueOf(_divide));
-        Vector2d _plus = force.operator_plus(_multiply);
-        force = _plus;
+        Vector2d _divide = p.position.operator_divide(Double.valueOf(_length_1));
+        Vector2d _minus = force.operator_minus(_divide);
+        force = _minus;
         count++;
       }
     }
-    Vector2d _multiply_1 = force.operator_multiply(Double.valueOf((1d / count)));
-    force = _multiply_1;
+    Vector2d _divide_1 = force.operator_divide(Double.valueOf(((double) count)));
+    force = _divide_1;
     return force;
   }
   

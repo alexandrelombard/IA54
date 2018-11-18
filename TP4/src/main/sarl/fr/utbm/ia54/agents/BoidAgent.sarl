@@ -16,6 +16,7 @@ import fr.utbm.ia54.Perception
  * @author Alexandre Lombard
  * 
  */
+// TODO Adjust forces
 agent BoidAgent {
 	
 	uses DefaultContextInteractions
@@ -31,9 +32,10 @@ agent BoidAgent {
 	on PerceptionEvent {
 		var force = new Vector2d()
 		
-		force = force + cohesion(occurrence.velocity, occurrence.perceivedBodies)
-		force = force + alignment(occurrence.velocity, occurrence.perceivedBodies)
-		force = force + separation(occurrence.perceivedBodies)
+		// Arbitrary coefficient are applied to each force
+		force = force + cohesion(occurrence.velocity, occurrence.perceivedBodies) * 0.001
+		force = force + alignment(occurrence.velocity, occurrence.perceivedBodies) * 0.01
+		force = force + separation(occurrence.perceivedBodies) * 1.0
 		
 		new IntentionEvent(force).emit [it.UUID == occurrence.source.UUID]
 	}
@@ -47,7 +49,7 @@ agent BoidAgent {
 			averageLocation = averageLocation + p.position
 		}
 		
-		averageLocation = averageLocation * (1d / perceptions.size)
+		averageLocation = averageLocation / (perceptions.size as double)
 		
 		// Steer to the average location 
 		return averageLocation - velocity
@@ -61,7 +63,7 @@ agent BoidAgent {
 			averageVelocity = averageVelocity + p.velocity
 		}
 		
-		averageVelocity = averageVelocity * (1d / perceptions.size)
+		averageVelocity = averageVelocity / (perceptions.size as double)
 		
 		return averageVelocity - velocity
 	}
@@ -73,12 +75,12 @@ agent BoidAgent {
 		
 		for(p: perceptions) {
 			if (p.position.length > 0) {
-				force = force + p.position * (1d / p.position.length)
+				force = force - p.position / p.position.length
 				count++;
 			}
 		}
 		
-		force = force * (1d / count)
+		force = force / (count as double)
 		
 		return force
 	}
