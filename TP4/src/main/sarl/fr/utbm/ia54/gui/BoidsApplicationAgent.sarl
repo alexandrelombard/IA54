@@ -17,18 +17,20 @@ agent BoidsApplicationAgent {
 
 	uses Behaviors
 
+	var fxcontroller : BoidsApplicationController 
 	var javafxBehavior : FXBehavior
 
 	on Initialize {
-		var fxcontroller = occurrence.parameters.get(0) as FxViewerController
+		fxcontroller = occurrence.parameters.get(0) as BoidsApplicationController
 
 		this.javafxBehavior = new FXBehavior(this, fxcontroller)
 		this.javafxBehavior.registerBehavior
 	}
 	
 	on EnvironmentUpdatedEvent {
-		val ^event = new EnvironmentUpdatedEvent(occurrence.environment)
-		javafxBehavior.UISpace.emit(occurrence.source.UUID, ^event)
+		//val ^event = new EnvironmentUpdatedEvent(occurrence.environment)
+		//javafxBehavior.UISpace.emit(occurrence.source.UUID, ^event)
+		fxcontroller.refresh(occurrence.environment)
 	}
 	
 }

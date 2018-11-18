@@ -12,7 +12,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 class BoidBody extends Object {
 
 	/** Perception radius of the body */
-	public val perceptionRadius = 100.0	// Note: the value is constant here, feel free to make it customizable
+	public val perceptionRadius = 500.0	// Note: the value is constant here, feel free to make it customizable
 	
 	@Accessors(PUBLIC_GETTER)
 	var position : Vector2d = new Vector2d()

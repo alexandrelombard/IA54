@@ -3,15 +3,16 @@
  */
 package fr.utbm.ia54.gui
 
-import io.sarl.javafx.FxViewerController
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.UUID
-import javafx.fxml.FXML
 import fr.utbm.ia54.Environment
 import fr.utbm.ia54.EnvironmentUpdatedEvent
-import javafx.scene.Group
-import org.eclipse.xtend.lib.annotations.Accessors
 import fr.utbm.ia54.gui.components.BoidView
+import io.sarl.javafx.FxViewerController
+import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
+import javafx.application.Platform
+import javafx.fxml.FXML
+import javafx.scene.layout.Pane
+import org.eclipse.xtend.lib.annotations.Accessors
 
 /** 
  * @author Alexandre Lombard
@@ -23,7 +24,7 @@ class BoidsApplicationController extends FxViewerController {
 	var launchedAgent : UUID
 	
 	@Accessors(PUBLIC_SETTER)
-	var content: Group
+	var content: Pane
 
 	/** UI initialization. The agent framework is started. */
 	@FXML
@@ -34,22 +35,32 @@ class BoidsApplicationController extends FxViewerController {
 			]
 		}
 	}
-
-	protected def refresh(environment: Environment) {
-		// Remove everything
-		content.children.clear
-		
-		// Add per-body boid view
-		for (body : environment.bodies.values) {
-			val boidView = new BoidView()
-			boidView.translateX = body.position.x
-			boidView.translateY = body.position.y
-			content.children.add(boidView)
-		}
+	
+	/** UI exit. Kill everything. */
+	@FXML
+	def exit {
+		System.exit(0)
 	}
 
-	dispatch def receiveEvent(^event : EnvironmentUpdatedEvent) {
-		refresh(^event.environment)
+	protected def refresh(environment : Environment) {
+		Platform.runLater [			
+			// Remove everything
+			content.children.clear
+
+			// Add per-body boid view
+			for (body : environment.bodies.values) {				
+				val boidView = new BoidView()
+				boidView.translateX = body.position.x
+				boidView.translateY = body.position.y
+				
+				content.children.add(boidView)
+			}
+		]
 	}
+
+	//dispatch def receiveEvent(^event : EnvironmentUpdatedEvent) {
+	//	System.out.println("top")
+	//	refresh(^event.environment)
+	//}
 
 }

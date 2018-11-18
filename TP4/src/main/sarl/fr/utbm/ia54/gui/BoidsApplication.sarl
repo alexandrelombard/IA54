@@ -5,13 +5,14 @@ package fr.utbm.ia54.gui
 
 import io.sarl.javafx.FxApplication
 import javafx.fxml.FXMLLoader
-import javafx.scene.Group
 import javafx.scene.Scene
-import javafx.stage.Stage
-import javafx.scene.control.MenuBar
-import javafx.scene.layout.VBox
 import javafx.scene.control.Menu
+import javafx.scene.control.MenuBar
 import javafx.scene.control.MenuItem
+import javafx.scene.layout.Pane
+import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
+import javafx.stage.Stage
 
 /** 
  * @author Alexandre Lombard
@@ -21,24 +22,27 @@ class BoidsApplication extends FxApplication {
 	
 	protected def doApplicationStart(stage : Stage) : FXMLLoader {
 		val root = new VBox()
-		val scene = new Scene(root)
+		val scene = new Scene(root, 800, 600)
 		val controller = new BoidsApplicationController()
-		val content = new Group()
+		val content = new Pane()
+
+		VBox.setVgrow(content, Priority.ALWAYS)
 		
 		val menuBar = new MenuBar()
 		val mainMenu = new Menu("Menu")
 		val initializeMenuItem = new MenuItem("Initialize")
 		val exitMenuItem = new MenuItem("Exit")
 		
-		initializeMenuItem.onAction = [ 
-			controller.initialize
-		]
+		initializeMenuItem.onAction = [ controller.initialize ]
+		exitMenuItem.onAction = [ controller.exit ]
 		
 		mainMenu.items.add(initializeMenuItem)
 		mainMenu.items.add(exitMenuItem)
 		menuBar.menus.add(mainMenu)
 		root.children.add(menuBar)
 		root.children.add(content)
+		
+		content.style = "-fx-background-color: lightgreen"
 
 		controller.content = content
 

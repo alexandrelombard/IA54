@@ -3,9 +3,10 @@
  */
 package fr.utbm.ia54
 
-import io.sarl.lang.core.Address
 import java.util.Map
+import java.util.UUID
 import org.eclipse.xtend.lib.annotations.Accessors
+import java.util.concurrent.ConcurrentHashMap
 
 /** 
  * @author Alexandre Lombard
@@ -14,6 +15,5 @@ import org.eclipse.xtend.lib.annotations.Accessors
 class Environment extends Object {
 	
 	@Accessors(PUBLIC_GETTER)
-	val bodies : Map<Address, BoidBody> = newHashMap
-
+	val bodies : Map<UUID, BoidBody> = new ConcurrentHashMap
 }

@@ -35,7 +35,7 @@ agent BoidAgent {
 		force = force + alignment(occurrence.velocity, occurrence.perceivedBodies)
 		force = force + separation(occurrence.perceivedBodies)
 		
-		new IntentionEvent(force).emit
+		new IntentionEvent(force).emit [it.UUID == occurrence.source.UUID]
 	}
 	
 	def cohesion(velocity: Vector2d, perceptions : List<Perception>) : Vector2d {
@@ -43,7 +43,7 @@ agent BoidAgent {
 		// Note: perceptions are relative so the average location is also relative
 		var averageLocation = new Vector2d()
 		
-		for(p: perceptions) {
+		for (p : perceptions) {
 			averageLocation = averageLocation + p.position
 		}
 		
@@ -57,7 +57,7 @@ agent BoidAgent {
 		// Compute the average velocity
 		var averageVelocity = new Vector2d
 		
-		for(p: perceptions) {
+		for (p : perceptions) {
 			averageVelocity = averageVelocity + p.velocity
 		}
 		

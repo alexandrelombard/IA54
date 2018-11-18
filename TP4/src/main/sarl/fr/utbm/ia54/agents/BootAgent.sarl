@@ -36,11 +36,8 @@ agent BootAgent {
 		Application::launch(typeof(BoidsApplication))
 	}
 	
-	on AgentSpawned [occurrence.agentType == typeof(EnvironmentAgent)] {
-		// When the environment is spawned, we spawn the boids
-		for (i : 0 .. 100) {
-			typeof(BoidAgent).spawn
-		}
+	on AgentSpawned {
+		//
 	}
 
 	on Destroy {

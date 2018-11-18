@@ -5,7 +5,9 @@ package fr.utbm.ia54.agents
 
 import fr.utbm.ia54.BoidBody
 import fr.utbm.ia54.Environment
+import fr.utbm.ia54.EnvironmentUpdatedEvent
 import fr.utbm.ia54.IntentionEvent
+import fr.utbm.ia54.Perception
 import fr.utbm.ia54.PerceptionEvent
 import fr.utbm.ia54.SimulationStepEvent
 import fr.utbm.ia54.Vector2d
@@ -17,8 +19,9 @@ import io.sarl.core.Initialize
 import io.sarl.lang.core.Address
 import java.util.HashMap
 import java.util.Map
-import fr.utbm.ia54.Perception
-import fr.utbm.ia54.EnvironmentUpdatedEvent
+import io.sarl.core.Lifecycle
+import java.util.concurrent.ConcurrentHashMap
+import java.util.UUID
 
 /** 
  * @author Alexandre Lombard
@@ -26,27 +29,35 @@ import fr.utbm.ia54.EnvironmentUpdatedEvent
  */
 agent EnvironmentAgent {
 	
-	uses DefaultContextInteractions
+	uses Lifecycle, DefaultContextInteractions
 	
 	val environment : Environment = new Environment()
-	val intentions : Map<Address, Vector2d> = newHashMap
+	val intentions : Map<UUID, Vector2d> = new ConcurrentHashMap
 
 	on Initialize {
-		// 
+		// When the environment is spawned, we spawn the boids
+		for (i : 0 .. 10) {
+			// We spawn the agent
+			typeof(BoidAgent).spawn
+		}
 	}
 
 	on Destroy {
 		//
 	}
 
-	on AgentSpawned [occurrence.agentType == typeof(BoidAgent)] {
-		// A new boid agent has been spawned, we create its body with a random position
-		var body = new BoidBody(new Vector2d(1000d * Math.random, 1000d * Math.random))
-		environment.bodies.put(occurrence.source, body)
+	on AgentSpawned {
+		if (occurrence.agentType == "fr.utbm.ia54.agents.BoidAgent") {
+			// A new boid agent has been spawned, we create its body with a random position
+			var body = new BoidBody(new Vector2d(400d * Math.random + 200d, 300d * Math.random + 150d))
+			environment.bodies.put(occurrence.agentID, body)
+		}
 	}
 
 	on AgentKilled {
-		// A new agent has been killed in our context.
+		if (occurrence.agentType == "fr.utbm.ia54.agents.BoidAgent") {
+			environment.bodies.remove(occurrence.agentID)
+		}
 	}
 	
 	on SimulationStepEvent {
@@ -54,13 +65,13 @@ agent EnvironmentAgent {
 		val currentIntentions = new HashMap(intentions)
 		
 		// Update the agents (we don't check for collisions but we could)
-		for(intentionEntry : currentIntentions.entrySet) {
+		for (intentionEntry : currentIntentions.entrySet) {
 			val body = environment.bodies.get(intentionEntry.key)
 			if(body !== null) {
 				body.move(intentionEntry.value, occurrence.deltaTime)
 			}
 		}
-		
+
 		// Compute the perceptions to send them to the agents
 		for(bodyEntry : environment.bodies.entrySet()) {
 			val body = bodyEntry.value
@@ -73,15 +84,16 @@ agent EnvironmentAgent {
 				}
 			}
 			
-			new PerceptionEvent(new Vector2d(body.velocity), perceivedBodies).emit [it == bodyEntry.key]
+			new PerceptionEvent(new Vector2d(body.velocity), perceivedBodies).emit [it.UUID == bodyEntry.key]
 		}
 		
 		// Emit (for UI) an event notifying the environment has been updated
 		new EnvironmentUpdatedEvent(environment).emit
+		
 	}
 	
 	on IntentionEvent {
 		// If there are several intentions, only the last one will be applied when they will be consumed
-		intentions.put(occurrence.source, occurrence.force)
+		intentions.put(occurrence.source.UUID, occurrence.force)
 	}
 }
